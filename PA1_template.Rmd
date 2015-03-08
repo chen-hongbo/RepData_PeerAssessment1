@@ -7,19 +7,45 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
-
+```{r echo = TRUE}
+    data_set <- read.csv("activity.csv",head=TRUE)
+    data_set$date <- as.Date(as.character(data_set$date))
+```
 ## What is mean total number of steps taken per day?
-
-
+```{r}
+    options(digits = 2)
+    total_data_set <- tapply(data_set$steps,data_set$date,sum,simplify=FALSE,na.rm=TRUE)
+    plot(as.numeric(total_data_set),type="h",lwd=7,col="blue",xlab="Steps",main="total number of steps taken each day")
+    print("mean total number of steps taken per day:\n")
+    tapply(data_set$steps,data_set$date,mean,na.rm=TRUE)
+    paste("median total number of steps taken per day:\n")
+    tapply(data_set$steps,data_set$date,median,na.rm=TRUE)
+```
 
 ## What is the average daily activity pattern?
-
-
+```{r}
+    options(digits = 2)
+    total_data_set <- tapply(data_set$steps,data_set$interval,mean,simplify=FALSE,na.rm=TRUE)
+    plot(as.numeric(total_data_set),type="l",xlab="Interval",ylab="Average of steps per day")
+    paste("Which 5-minute interval, on average across all the days in the dataset, not contains the maximum number of steps,the maxinum number of steps is ",as.character(max(data_set$steps,na.rm=TRUE)))
+```
 
 ## Imputing missing values
+```{r}
+    paste("the total number of missing values in the dataset ",as.character(nrow(data_set)-sum(complete.cases(data_set$steps))))
+    fill_data_set <- data_set
+    fill_data_set[which(is.na(fill_data_set$steps)==TRUE),"steps"] <- mean(data_set$steps,na.rm=TRUE)
+    total_data_set <- tapply(fill_data_set$steps,fill_data_set$date,sum,simplify=FALSE,na.rm=TRUE)
+    plot(as.numeric(total_data_set),type="h",lwd=7,col="blue",xlab="Steps",main="total number of steps taken each day[Fill Miss Data]")
+    print("mean total number of steps taken per day:\n")
+    tapply(fill_data_set$steps,fill_data_set$date,mean,na.rm=TRUE)
+    paste("median total number of steps taken per day:\n")
+    tapply(fill_data_set$steps,fill_data_set$date,median,na.rm=TRUE)
 
-
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+    
+
+```
