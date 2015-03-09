@@ -53,7 +53,7 @@ output:
     week_level_data[isWeekend(week_level_data$date),"level"] <-c("weekend")
     ansy_data <- tapply(week_level_data$steps,week_level_data[,c("level","interval")],mean,na.rm=TRUE)
     steps_mean <- ts(cbind(weekday = ansy_data[1,],weekend = ansy_data[2,]))
-    xyplot(steps_mean,screens=list("weekday","weekend"),xlab="Interval",ylab="Number of Steps",layout=c(1,2))
+    xyplot(steps_mean,screens=list("weekday","weekend"),xlab="Interval",ylab="Number of Steps",layout=c(1,2),draw=FALSE)
     dev.off()
 
 ```
