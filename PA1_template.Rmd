@@ -8,6 +8,8 @@ output:
 
 ## Loading and preprocessing the data
 ```{r echo = TRUE}
+    library(timeDate)
+    library(lattice)
     data_set <- read.csv("activity.csv",head=TRUE)
     data_set$date <- as.Date(as.character(data_set$date))
 ```
@@ -34,7 +36,7 @@ output:
 ```{r}
     paste("the total number of missing values in the dataset ",as.character(nrow(data_set)-sum(complete.cases(data_set$steps))))
     fill_data_set <- data_set
-    fill_data_set[which(is.na(fill_data_set$steps)==TRUE),"steps"] <- mean(data_set$steps,na.rm=TRUE)
+    fill_data_set[is.na(fill_data_set$steps),"steps"] <- mean(data_set$steps,na.rm=TRUE)
     total_data_set <- tapply(fill_data_set$steps,fill_data_set$date,sum,simplify=FALSE,na.rm=TRUE)
     plot(as.numeric(total_data_set),type="h",lwd=7,col="blue",xlab="Steps",main="total number of steps taken each day[Fill Miss Data]")
     print("mean total number of steps taken per day:\n")
@@ -46,6 +48,14 @@ output:
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ```{r}
-    
+    week_level_data <- data_set
+    week_level_data[isWeekday(week_level_data$date),"level"] <-c("weekday")
+    week_level_data[isWeekend(week_level_data$date),"level"] <-c("weekend")
+    filter_cond <- split(week_level_data,week_level_data[,c("level","interval")],drop=TRUE)
+    ansy_data <- tapply(week_level_data$steps,week_level_data[,c("level","interval")],mean,na.rm=TRUE)
+    par(mfrow = c(2,1)) 
+    plot.ts(ansy_data["weekday",],ylab="",type="l",col="blue",main="weekday")
+    plot.ts(ansy_data["weekend",],ylab="",type="l",col="blue",main="weekend")
+    dev.off()
 
 ```
