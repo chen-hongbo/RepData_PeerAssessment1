@@ -55,5 +55,4 @@ output:
     steps_mean <- ts(cbind(weekday = ansy_data[1,],weekend = ansy_data[2,]))
     xyplot(steps_mean,screens=list("weekday","weekend"),xlab="Interval",ylab="Number of Steps",layout=c(1,2))
     dev.off()
-
 ```
