@@ -48,12 +48,15 @@ output:
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ```{r}
-    week_level_data <- data_set
-    week_level_data[isWeekday(week_level_data$date),"level"] <-c("weekday")
-    week_level_data[isWeekend(week_level_data$date),"level"] <-c("weekend")
-    ansy_data <- as.data.frame(tapply(week_level_data$steps,week_level_data[,c("level","interval")],mean,na.rm=TRUE))
-    axis_x <- as.numeric(names(ansy_data))
-    xyplot(ansy_data["weekday",]~axis_x|"weekday",xlab="Interval",ylab="Number of Steps",type="l")
-    xyplot(ansy_data["weekend",]~axis_x|"weekend",xlab="Interval",ylab="Number of Steps",type="l")
+    data_set[isWeekday(data_set$date),"level"] <- c("weekday")
+    data_set[isWeekend(data_set$date),"level"] <- c("weekend")
+    ansy_data <- tapply(data_set$steps,data_set[,c("level","interval")],mean,na.rm=TRUE)
+    resu_data <- cbind(ansy_data[1,],ansy_data[2,])
+    resu_data <-data.frame(t(ansy_data))
+    axis_x<-row.names(resu_data)
+    steps <- as.vector(cbind(resu_data[,1],resu_data[,2]))
+    steps <- as.data.frame(steps)
+    steps <-data.frame(cbind(steps,interval=as.numeric(rep(axis_x,2)),group=c(rep("weekday",288),rep("weekend",288))))
+    xyplot(steps~interval|group,data=steps,type="l",layout=c(1,2),ylab="Numbers of Steps")
     dev.off()
 ```
